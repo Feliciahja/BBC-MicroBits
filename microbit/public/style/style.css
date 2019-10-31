@@ -1,0 +1,170 @@
+
+/*background: url(../img/microbit2.jpg)*/
+/*  ===================================================================================
+	|	                            general                                           |
+    ===================================================================================
+*/
+
+html {
+    background: url(../img/microbit2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+body {
+    text-align: center;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+
+
+
+p {
+    color: #3D9970;
+}
+
+h1 {
+    color: #3D9970;
+    border-color: white;
+}
+
+
+h3 {
+    color: #3D9970;
+    border-color: white;
+    font-size: 15px;
+    text-align: justify;
+    width: 500px;
+    left: 500px;
+    display: inline-block;
+}
+
+/*  ===================================================================================
+	|	                            header                                            |
+    ===================================================================================
+*/
+
+header {
+    font-size: 1.2em;
+    background-color: #dcdcdc;
+    border: 3px solid #3D9970;
+}
+
+ul {
+    list-style-type: none;
+    margin: 1em;
+}
+
+ul.menu a {         /* color for non-current */
+    color: #3D9970;
+}
+
+ul.menu a:hover {   /* color while hovering */
+    color: #00bfff;
+}
+
+h1#products,
+h1#categories,
+h1#customers,
+h1#details,
+p#details {       /* aligned with corresponding tables */
+    margin-right: 600px;
+}
+
+/*  ===================================================================================
+	|	                            footer                                            |
+    ===================================================================================
+*/
+
+footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    margin-top: 5em;
+    margin-bottom: 0.5em;
+    font-style: italic;
+}
+
+/*  ===================================================================================
+	|	                            tables                                            |
+    ===================================================================================
+*/
+
+table {
+    display: inline-block;
+    background-color: white;
+    /*margin-right: 600px;*/
+    font-size: 20px;
+    border: 3px solid #3D9970;
+    padding: 2px;
+}
+
+table#history,
+table#product,
+table#customer,
+table#details {
+    border: 3px solid #3D9970;
+}
+
+
+td {                    /* cell */
+    text-align: center;
+    font-size: 18px;
+    /*padding-left: 5px;
+    padding-right: 5px;*/
+    padding:5px 15px 0 15px;
+}
+
+td#actions a {           /* color for non-current */
+    color: #3D9970;
+}
+
+td#actions a:hover {    /* color while hovering */
+    color: #00bfff;
+}
+
+th {                    /* column header */
+    background-color: #dcdcdc;
+    padding:5px 10px 5px 10px;
+}
+
+table,
+th,
+td {
+    /*border: 1px solid #3D9970;
+    /*border-collapse: collapse;
+}
+
+form.label-left {
+    margin-bottom: 24px;
+    color: yellow;
+}
+
+form.label-left label,
+form.label-left input[type=text],
+form.label-left input[type=number] {
+    height: 20px;
+    margin-bottom: 4px;
+}
+
+form.label-left label {
+    width: 5em;
+    float: left;
+    padding-top: 6px;
+    padding-right: 1em;
+
+    /* text-align: right; */
+}
+
+form.label-left label::after {
+    content: ":";
+}
+
+form.label-left input[type=text],
+form.label-left input[type=number] {
+    display: block;
+    width: 20em;
+    height: 25px;
+}
+

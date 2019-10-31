@@ -1,0 +1,474 @@
+<%- include("../layouts/header", {title: title}); %>
+
+<h1>BBC Micro:bits Sensors</h1>
+
+<!doctype html>
+<html>
+<body>
+  <div id="container" style = "position:fixed; left:100px; top:190px; margin:0 auto; border: 2px solid black">
+  </div>
+
+
+</body>
+
+</html>
+<style>
+  .myclass{
+  width: 30px;
+  height: 30px;
+  display: block;
+  font-size: 1rem; 
+  text-align: center;
+  float: left;
+  border: 1px solid black;
+  background: white;
+  margin:0 auto;
+}
+  .clear{
+    clear: left;
+  }
+
+</style>
+<script>
+    window.onload = async function () {
+    //GET state of microbits, send req to database
+    //Draw state
+    //getState
+    //updateState
+    
+    getDimensions();
+    await wait(20); 
+    createGrid();
+    await wait(20);
+    getState();
+  }
+  var x;
+  var y;
+  function wait(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  async function createGrid() {
+    
+    var container = document.getElementById('container');
+    let colDimensions = x;
+    let rowDimensions = y;
+    console.log("creating board " + colDimensions + "x" + rowDimensions);
+    console.log("creating board " + x + "-" + y);
+
+    var child = container.lastElementChild;  
+      while (child) { 
+          container.removeChild(child); 
+          child = container.lastElementChild;
+      }
+
+      for (var i = 0; i < colDimensions; i++) {
+        for (var j = 0; j < rowDimensions; j++) {
+          
+          var elem = document.createElement('div');
+          
+          elem.className = 'myclass';
+          elem.contenteditable = "true";
+          elem.setAttribute('data-row', i);
+          elem.setAttribute('data-col', j);
+
+          elem.id =`${i}:${j}`;
+
+          elem.addEventListener("click", async function() { //Add event listener
+
+          const column = this.getAttribute('data-col');
+          const row = this.getAttribute('data-row');
+
+          let currentAction = getCurrentAction();
+          console.log("Current action:" + currentAction)
+          if (currentAction == "placebit") {
+            let microbitId = document.getElementById('userinput').value;
+            const queryParams = `microbitId=${microbitId}&row=${row}&column=${column}`;
+            //console.log(queryParams);
+
+            //RETURN status code
+            placeMicrobit(queryParams);
+            //if OK, print updated
+            //if not ok, write to user what went wrong
+            getState();
+          } else if (currentAction == "deletebit") {
+            let microbitId = this.id;
+            removeMicrobit(microbitId);
+            getState();
+          } else if (currentAction == "infobit") {
+            //Should query for microbit ID
+            let microbitId = this.id;
+            infoMicrobit(microbitId);
+          }
+
+
+        });
+        container.appendChild(elem);
+      
+    }
+  
+      var breaker = document.createElement('div');
+      container.appendChild(breaker);
+      breaker.className = 'clear';
+    }
+    
+  }
+
+
+  function checkDivs() {
+
+let containerNodes = document.getElementById('container').childNodes;
+console.log("PRINTING DIVS:" + containerNodes.length);
+
+for (i = 0; i < containerNodes.length; i++) {
+  if (containerNodes[i].className == "myclass") {
+    let divLocation = containerNodes[i];
+    let row = divLocation.getAttribute('data-row');
+    let column = divLocation.getAttribute('data-col');
+    console.log(row + ".::." + column);
+
+  }
+}
+}
+
+function getState() {
+    const xhrState = new XMLHttpRequest();
+    xhrState.open("GET", 'state');
+    //Send the proper header information along with the request
+    xhrState.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhrState.responseType = 'json';
+
+    xhrState.onreadystatechange = function () { // Call a function when the state changes.
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        // Request finished. Do processing here.
+
+        ///MOVE THIS TO updateState()
+        let containerNodes = document.getElementById('container').childNodes;
+        console.log("length:" + containerNodes.length);
+
+        let jsonData = this.response;
+
+        for (i = 0; i < containerNodes.length; i++) {
+          if (containerNodes[i].className == "myclass") {
+            let divLocation = containerNodes[i];//Enskilda div
+            let row = divLocation.getAttribute('data-row');
+            let column = divLocation.getAttribute('data-col');
+
+            //LOOP THROUGH RESPONSE FROM getState
+            //Compare to all results within response
+            let isAllocated = false;
+            for (j = 0; j < jsonData.data.length; j++) {
+              let microbit = jsonData.data[j];
+              //If we find a microbit we update it
+              if (microbit.row == row && microbit.column == column) {
+                divLocation.id = microbit.id; //keep for deleting location
+                divLocation.innerHTML = microbit.id; //for showing
+                divLocation.style.background = '#e85a5a';
+                isAllocated = true;
+                break;
+              }
+            }
+            //If last iteration we set it to white and blank fields
+            if (!isAllocated) {
+              divLocation.style.background = 'white';
+              divLocation.id = "";
+              divLocation.innerHTML = "";
+            }
+          }
+        }
+      }
+    }
+    xhrState.send();
+  }
+
+
+  function getDimensions() {
+
+    const xhrState = new XMLHttpRequest();
+    xhrState.open("GET", 'dimensions');
+    //Send the proper header information along with the request
+    xhrState.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhrState.responseType = 'json';
+
+    xhrState.onreadystatechange = function () { // Call a function when the state changes.
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        // Request finished. Do processing here.
+
+        let jsonData = this.response;
+
+            let dimensions = jsonData.data[0];
+            var xVal = dimensions.xlength;
+            var yVal = dimensions.height;
+            console.log("setting x to " + dimensions.xlength)
+            console.log("setting y to " + dimensions.height)
+            console.log("setting x to " + xVal)
+            console.log("setting y to " + yVal)
+            x = xVal;
+            y = yVal;
+            console.log("x=" + xVal);
+            console.log("y=" + yVal);
+            document.getElementById('xdim').value = xVal;
+            document.getElementById('ydim').value = yVal;
+
+          } else if (this.readyState === XMLHttpRequest.DONE && this.status === 304) {
+            document.getElementById('xdim').value = 10;
+            document.getElementById('ydim').value = 10;
+            x = 10;
+            y = 10;
+          }
+        }
+    xhrState.send();
+  }
+
+  function setDimensions() {
+
+    let colDimensions = document.getElementById('xdim').value;
+    let rowDimensions = document.getElementById('ydim').value;
+
+    x = colDimensions;
+    y = rowDimensions;
+    const queryParams = `length=${colDimensions}&height=${rowDimensions}`;
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", 'dimensions', true);
+    xhr.responseType = 'json';
+
+    //Send the proper header information along with the request
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () { // Call a function when the state changes.
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        console.log("DIMENSIONS ADDED");
+        //Update state
+      } else {
+        console.log("FAILED TO INSERT");
+      }
+    }
+    xhr.send(queryParams);
+    createGrid();
+    getState();
+}
+
+
+  function placeMicrobit(queryParams) {
+    
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", 'placebit', true);
+      xhr.responseType = 'json';
+
+      //Send the proper header information along with the request
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function () { // Call a function when the state changes.
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+          console.log("MICROBIT ADDDED");
+          //Update state
+        } else {
+          console.log("FAILED TO INSERT");
+        }
+      }
+      xhr.send(queryParams);
+  }
+
+
+  function removeMicrobit(microbitId) {
+    
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", `deletebit/${microbitId}`, true);
+      xhr.responseType = 'json';
+
+      //Send the proper header information along with the request
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function () { // Call a function when the state changes.
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+          console.log("MICROBIT DELETED");
+          //Update state
+        } else {
+          console.log("FAILED TO DELETE");
+        }
+      }
+      xhr.send();
+  }
+
+  function infoMicrobit(microbitId) {
+
+      var url = `/microbit/infobit/${microbitId}`;
+      
+      const respons = fetch(url).then(function(response) {
+                      if(response.ok) { // Check if response went through
+                          response.json().then(function(respons) { 
+                            console.log(respons);
+                            var data = respons[0];
+                              var titel = document.getElementById('Title');
+                              var live = '<p>Live data from microbit ' + data.id + '</p><p>Temperature: ' + data.temperature + '°C</p>' + '<p>Light Level: ' + data.light_level + '</p>';
+                              titel.innerHTML = "";
+                              titel.innerHTML += live;
+                              document.getElementById("infoMicrobit").style.visibility = "visible";
+                              document.getElementById("dataBorder").style.visibility = "visible";
+                              window.currentId = data.id;
+                          });
+                      } else { // Response wasn't ok. Check dev tools
+                            console.log("response failed?");
+                          }
+        });
+  }
+
+  function getHistory() {
+
+      var url = `/microbit/history/${window.currentId}`;
+      
+      const respons = fetch(url).then(function(response) {
+                      if(response.ok) { // Check if response went through
+                          response.json().then(function(respons) { 
+                            console.log(respons);
+                            var jsonData = this.respons;
+                          
+                              var table = document.createElement('table');
+                              var tr = document.createElement('tr');
+                              var th = document.createElement('th');
+                              
+                              th.innerHTML = "Time";
+                              tr.appendChild(th);
+                              var th = document.createElement('th');
+                              th.innerHTML = "Id";
+                              tr.appendChild(th);
+                              var th = document.createElement('th');
+                              th.innerHTML = "Temperature";
+                              tr.appendChild(th);
+                              var th = document.createElement('th');
+                              th.innerHTML = "Lightlevel";
+                              tr.appendChild(th);
+
+                              table.appendChild(tr);
+
+                              for (let i = 0; i < respons.length; i++) {
+                                var tr = document.createElement('tr');
+                                var td = document.createElement('td');
+                                var timestamp = new Date(respons[i].time);
+                                td.innerHTML =  timestamp.toLocaleString();
+                                tr.appendChild(td);
+                                var td = document.createElement('td');
+                                td.innerHTML = respons[i].id;
+                                tr.appendChild(td);
+                                var td = document.createElement('td');
+                                td.innerHTML = respons[i].temperature + " °C";
+                                tr.appendChild(td);
+                                var td = document.createElement('td');
+                                td.innerHTML = respons[i].light_level;
+                                tr.appendChild(td);
+                                table.appendChild(tr);
+                              }
+
+                              var divContainer = document.getElementById("history");
+                                  divContainer.innerHTML = "";
+                                  divContainer.appendChild(table);
+                                  divContainer.style.visibility = "visible";                              
+                          
+                          });
+                      } else { // Response wasn't ok. Check dev tools
+                            console.log("response failed?");
+                        }
+      });
+  }
+
+  function getInput() {
+      window.userInput = document.getElementById('userinput').value;
+  }
+
+  function getCurrentAction() {
+      return document.querySelector('input[name="currentaction"]:checked').value;
+  }
+
+  function showField() {
+
+      var element = document.getElementById('Input');
+      element.style.visibility = "visible";
+      var table = document.getElementById('history');
+      table.style.visibility = "hidden";
+      var datainfo = document.getElementById('infoMicrobit');
+      datainfo.style.visibility = "hidden";
+      var dataBorder = document.getElementById('dataBorder');
+      dataBorder.style.visibility = "hidden";
+  }
+
+  function hideField() {
+
+      var element = document.getElementById('Input');
+      element.style.visibility = "hidden";
+      var datainfo = document.getElementById('infoMicrobit');
+      datainfo.style.visibility = "hidden";
+      var dataBorder = document.getElementById('dataBorder');
+      dataBorder.style.visibility = "hidden";
+  }
+
+</script>
+  
+    <br>
+    <style>
+    .userInput {
+      visibility: hidden;
+      position: fixed;
+      left: 850px;
+      bottom: 350px;
+    }
+    </style>
+
+<div class="border" style= "border-top-style: dotted; border-right-style: solid; border-bottom-style: dotted; border-left-style: solid; 
+border-color: #3D9970; position: fixed; left: 150px; bottom: 40px; width: 230px; height: 120px;"></div>
+
+  <div class="setDimensions" id= "dim" style= "position:fixed; left:170px; bottom:60px; margin:0 auto;">
+  
+  <label for= "xdim" style= "color: #3D9970">Specify dimensions of grid</label>
+  <br>
+  <br>
+  <input id="xdim" type="number" name="dimensionx" value="10" min="3" max ="12" step="1">
+  <input id="ydim" type="number" name="dimensiony" value="10" min="3" max ="14" step="1">
+  <br>
+  <input type="submit" name="doit" id="button1" value="Set dimensions" onclick="setDimensions()">
+  </div>
+
+
+  <div class="userInput" id= "Input">
+  
+  <label for= "userinput" style= "color: #3D9970;">Input the ID of the microbit</label>
+  <br>
+  <input id="userinput" type="number" name="userinput" >
+  <br>
+  <input type="submit" name="doit" id="button1" value="Place Microbit">
+  </div>
+
+  <br><br>
+  
+  <form action="#n" name="userAction" style= "position:fixed; left:650px; bottom:350px; margin:0 auto;">
+    <div>
+      <input type="radio" id="placebit" name="currentaction" value="placebit" onclick="showField()">
+      <label for="placebit" style= "color: #3D9970; font-size: 19px;"> Place a microbit</label>
+    </div>
+  
+    <div>
+      <input type="radio" id="deletebit" name="currentaction" value="deletebit" onclick="hideField()">
+      <label for="deletebit" style= "color: #3D9970; font-size: 19px;">Remove a microbit</label>
+    </div>
+  
+    <div>
+      <input type="radio" id="infobit" name="currentaction" value="infobit" onclick="hideField()">
+      <label for="infobit" style= "color: #3D9970; font-size: 19px; ">Info a microbit</label>
+    </div>
+  </form>
+
+  <div class="borderfordata" id ="dataBorder" style= "visibility:hidden; border-top-style: dotted; border-right-style: solid; border-bottom-style: dotted; border-left-style: solid; 
+border-color: #3D9970; position: fixed; left: 630px; bottom: 65px; width: 250px; height: 180px;"></div>
+
+  <div class="info" id ="infoMicrobit" style= "visibility: hidden">
+  <div id="Title" style= "position:fixed; left:650px; bottom:100px;  font-size: 1.2em; color: #3D9970"></div>
+
+  <input type="submit" name="doit" id="button2" value="View history" onclick="getHistory()" style="position:fixed; left:710px; bottom:80px;">
+  </div>
+
+<div id="history" style= "position:fixed; right:60px; top:170px; visibility: hidden; overflow:scroll; height: 520px;"></div>
+  
+  </body>
+  </html>
+  
+  <%- include("../layouts/footer"); %>

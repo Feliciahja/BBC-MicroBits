@@ -1,0 +1,24 @@
+{
+  "name": "eshop2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "canvas": "^2.6.0",
+    "console.table": "^0.10.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "interactjs": "^1.4.0-rc.13",
+    "jquery": "^3.4.1",
+    "jsdom": "^15.1.1",
+    "promise-mysql": "^3.3.2",
+    "urlencoded-parser": "^1.0.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}

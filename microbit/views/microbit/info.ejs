@@ -1,0 +1,18 @@
+<%- include("../layouts/header", {title: title}); %>
+
+<br>
+
+<h1>Info about BBC Micro:bits data</h1>
+
+<br>
+
+<div class="wrapper" style= "text-align:center; width: 500 px;">
+<h3>The light level ranges between 0-255. 0 means darkness and 255 means bright light. The micro:bit measures the light around it by using some of the LEDs on the LED screen. 
+        <br><br>The micro:bit has a built-in temperature sensor that can detect the current temperature of the device, in degrees and Celsius. 
+    The micro:bit does not have a dedicated temperature sensor. Instead, the temperature provided is actually the temperature of the silicon die on the main CPU. As the processor generally 
+    runs cold though (it is a high efficiency ARM core), the temperature 
+    is a good approximation of the ambient temperature.</h3>
+
+</div>
+
+<%- include("../layouts/footer"); %>
