@@ -6,6 +6,9 @@ Web based application for monitoring and measuring room temperature and light wi
 - Node.js version 10.15.0
 - Python 3.7.3
 - pip
+- MySQL
+- Chrome
+
 
 ## Common setup
 
@@ -13,7 +16,7 @@ Clone the repo and install the dependencies.
 
 git clone https://github.com/Feliciahja/BBC-MicroBits.git
 
-cd BBC-MicroBits.nodejs
+cd BBC-MicroBits/microbit/
 
 npm install
 
@@ -22,9 +25,17 @@ For python-script:
 - pip install pandas
 - pip install pymysql
 
+Log in to the database and run following scripts:
+1. setup.sql
+2. ddl.sql
+
 ## Executing program
 
-$ node index.js
+Run python-script in a separate terminal.
+
+Make sure you stand in directory BBC-MicroBits/microbit/
+
+node index.js
 
 Open http://localhost:1337/microbit/index
 
