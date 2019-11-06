@@ -20,9 +20,9 @@ git clone https://github.com/Feliciahja/BBC-MicroBits.git
 
 Install following packages with pip:
 
-- pip install pyserial
-- pip install pandas
-- pip install pymysql
+- `pip install pyserial`
+- `pip install pandas`
+- `pip install pymysql`
 
 ### Web app
 
