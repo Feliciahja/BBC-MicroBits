@@ -42,6 +42,8 @@ Log in to the database and run following scripts:
 
 Run python-script in a separate terminal.
 
+### Running web app
+
 Make sure you stand in directory BBC-MicroBits/microbit/
 
 node index.js
