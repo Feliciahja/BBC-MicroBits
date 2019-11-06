@@ -12,21 +12,23 @@ Web based application for monitoring and measuring room temperature and light wi
 
 ## Common setup
 
+Clone the repo and install the dependencies.
+
+git clone https://github.com/Feliciahja/BBC-MicroBits.git
+
 ### Python Script
 
-For python-script:
+Install following packages with pip:
+
 - pip install pyserial
 - pip install pandas
 - pip install pymysql
 
 ### Node.js
 
-Clone the repo and install the dependencies.
+Stand in directory BBC-MicroBits/microbit/
 
-git clone https://github.com/Feliciahja/BBC-MicroBits.git
-
-cd BBC-MicroBits/microbit/
-
+Run command:
 npm install
 
 ### MySQL
