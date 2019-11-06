@@ -24,11 +24,12 @@ Install following packages with pip:
 - pip install pandas
 - pip install pymysql
 
-### Node.js
+### Web app
 
 Stand in directory BBC-MicroBits/microbit/
 
 Run command:
+
 npm install
 
 ### MySQL
