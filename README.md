@@ -33,9 +33,9 @@ Run command:
 ``` sh
 npm install
 ``` 
-### MySQL
+### Set up database
 
-Log in to the database and run following scripts:
+To create the database and tables, start MySQL in a terminal and run following scripts:
 1. setup.sql
 2. ddl.sql
 
