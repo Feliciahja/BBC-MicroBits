@@ -11,11 +11,11 @@ Web based application for monitoring and measuring room temperature and light wi
 
 
 ## Common setup
-``` sh
-Clone the repo and install the dependencies.
-``` 
-git clone https://github.com/Feliciahja/BBC-MicroBits.git
 
+Clone the repo and install the dependencies.
+``` sh
+git clone https://github.com/Feliciahja/BBC-MicroBits.git
+``` 
 ### Python Script
 
 Install following packages with pip:
