@@ -30,8 +30,9 @@ Stand in directory BBC-MicroBits/microbit/
 
 Run command:
 
+``` sh
 npm install
-
+``` 
 ### MySQL
 
 Log in to the database and run following scripts:
@@ -45,8 +46,8 @@ Run python-script in a separate terminal.
 ### Running web app
 
 Make sure you stand in directory BBC-MicroBits/microbit/
-
+``` sh
 node index.js
-
+``` 
 Open http://localhost:1337/microbit/index
 
