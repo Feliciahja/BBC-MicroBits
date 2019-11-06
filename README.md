@@ -41,7 +41,7 @@ To create the database and tables, start MySQL in a terminal and run following s
 
 ## Executing program
 
-Run python-script in a separate terminal.
+To collect and persist the data from the micro:bits, open and run the dataToDb.py script in a separate terminal.
 
 ### Running web app
 
