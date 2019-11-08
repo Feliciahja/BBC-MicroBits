@@ -43,11 +43,11 @@ To create the database and tables, start MySQL in a terminal and run following s
 
 To collect and persist the data from the micro:bits, open and run the dataToDb.py script in a separate terminal.
 
-On UNIX systems run command:
+On UNIX systems, run command:
 ``` sh
 python dataToDb.py
 ``` 
-On Windows run command:
+On Windows, run command:
 ``` sh
 py dataToDb.py
 ``` 
