@@ -14,7 +14,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "interactjs": "^1.4.0-rc.13",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jsdom": "^15.1.1",
     "promise-mysql": "^3.3.2",
     "urlencoded-parser": "^1.0.0"
